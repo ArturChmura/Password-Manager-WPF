@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="pwśg_wpf_lab2.PasswordEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:pwśg_wpf_lab2"
+              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:SelectedToVisibility x:Key="SelectedToVisibility" />
+        <local:PassStrengthToColor x:Key="PassStrengthToColor" />
+        <local:PassStrengthToInt x:Key="PassStrengthToInt" />
+        <local:StringToCollapsed x:Key="StringToVisibility"/>
+        <local:FirstLetterConverter x:Key="firstLetterConverter" />
+        <local:ContentToEnable x:Key="ContentToEnable" />
+    
+
+        <DataTemplate x:Key="GroupingHeader">
+            <TextBlock Text="{Binding Path=Name}" Padding="5,2,0,2" Background="Gray" Foreground="White" />
+        </DataTemplate>
+
+        <!--TextBox z "Search..." placeholder-->
+        <Style x:Key="textBoxWithPlaceholder" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Grid Grid.Column="0">
+                                <TextBlock Text="Search..." Foreground="Gray" Margin="20,0,10,0" 
+                                           Visibility="{Binding ElementName=searchTextBox, Path=Text, Converter={StaticResource StringToVisibility}}"/>
+                                <TextBox x:Name="searchTextBox"  Margin="10,0,10,0" Background="Transparent"
+                                         Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    
+    <!--                    Main Grid                          -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="150" />
+            <ColumnDefinition Width="4" />
+            <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+       
+        <ScrollViewer  Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Vertical" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <!--                  Filter                          -->
+                    <TextBox Style="{StaticResource textBoxWithPlaceholder}" x:Name="searchBox"  
+                               IsEnabled="{Binding ElementName=rightControl, Path=Content, Converter={StaticResource ContentToEnable}}"/>
+                    <Button x:Name="addNewAccountButton" Click="AddNewAccountButton_Click" Margin="0,0,0,0" Grid.Column="1"
+                              IsEnabled="{Binding ElementName=rightControl, Path=Content, Converter={StaticResource ContentToEnable}}">
+                        Add new account</Button>
+                </Grid>
+                
+                <!--                  List                          -->
+                <ListView x:Name="passwordsList" Grid.Row="1" Grid.Column="0"  HorizontalContentAlignment="Stretch"
+                  IsEnabled="{Binding ElementName=rightControl, Path=Content, Converter={StaticResource ContentToEnable}}"
+                  ItemsSource="{Binding AccountCollection}" 
+                  SelectedItem="{Binding SelectedAccount, Mode=TwoWay}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="passwordsList_SelectionChanged">
+                    <ListView.GroupStyle>
+                        <GroupStyle HeaderTemplate="{StaticResource ResourceKey=GroupingHeader}" />
+                    </ListView.GroupStyle>
+                    
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:AccountInfo}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+                                <Image Source="{Binding IconSource}" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" />
+                                <TextBlock Text="{Binding Name}" Grid.Column="1" Grid.Row="0" Margin="10,0,0,0" Grid.ColumnSpan="2"/>
+                                <TextBlock Text="{Binding Login}" Grid.Column="1" Grid.Row="1"  Margin="10,0,0,0" Foreground="Gray" FontSize="12"/>
+                                <TextBlock Text="{Binding PasswordStrength}" Foreground="{Binding PasswordStrength, Converter={StaticResource PassStrengthToColor}}" FontSize="12" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" />
+
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </ScrollViewer>
+       
+       
+        
+        
+        <GridSplitter ResizeDirection="Columns" Grid.Column="1" Height="Auto" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Grid.RowSpan="2"/>
+
+
+        <!--                  Right Control                          -->
+        <ContentControl x:Name="rightControl" Grid.Row="0" Grid.Column="2" ></ContentControl>
+      
+    </Grid>
+</UserControl>

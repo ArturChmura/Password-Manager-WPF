@@ -1,0 +1,11 @@
+﻿<Window x:Class="pwśg_wpf_lab2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:pwśg_wpf_lab2"
+        Title="Password Manager" Height="600" Width="1200" MinWidth="600" MinHeight="300" WindowStartupLocation="CenterScreen" Icon="tibia.png">
+
+    <Grid>
+        <ContentControl x:Name="contentControl">
+        </ContentControl>
+    </Grid>
+</Window>
