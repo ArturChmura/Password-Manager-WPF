@@ -3,3 +3,4 @@
 * If you forgot your password, delete Password.bin (all encrypted data will be lost)
 * Right-click on the left side to add files or passwords for websites.
 * Don't forget to click Save
+* ![plot](./Screenshot_1.png)
